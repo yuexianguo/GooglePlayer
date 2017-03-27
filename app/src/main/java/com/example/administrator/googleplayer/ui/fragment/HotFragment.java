@@ -1,20 +1,60 @@
 package com.example.administrator.googleplayer.ui.fragment;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.example.administrator.googleplayer.R;
+import com.example.administrator.googleplayer.network.Api;
+import com.example.administrator.googleplayer.network.HeiMaRetrofit;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static android.R.id.list;
 
 /**
  * Created by Administrator on 2017/3/27.
  */
 
-public class HotFragment extends Fragment {
-    @Nullable
+public class HotFragment extends BaseFragment {
+
+    private List<String> mDataList;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected void startLoadData() {
+
+        Api api = HeiMaRetrofit.getInstrance().getApi();
+        Call<List<String>> listCall = api.listhot();
+        listCall.enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(Call<List<String>> call, Response<List<String> response) {
+                Toast.makeText(getContext(),response.body().toString(),Toast.LENGTH_SHORT).show();
+                mDataList=response.body();
+                onDataLoadSuccess();
+            }
+
+            @Override
+            public void onFailure(Call<List<String>> call, Throwable t) {
+                Toast.makeText(getContext(),"网络失败",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
+    /**
+     * 热门界面布局
+     * @return
+     */
+    @Override
+    protected View onCreateContentView() {
+        int padding = getResources().getDimensionPixelOffset(R.dimen.padding);
+        
+
+
         return null;
     }
 }
