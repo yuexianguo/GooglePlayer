@@ -1,20 +1,53 @@
 package com.example.administrator.googleplayer.ui.fragment;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.example.administrator.googleplayer.bean.AppListItemBean;
+import com.example.administrator.googleplayer.network.HeiMaRetrofit;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Administrator on 2017/3/27.
  */
 
-public class GameFragment extends Fragment {
-    @Nullable
+public class GameFragment extends BaseAppListFragment {
+
+
+
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return null;
+    protected void startLoadData() {
+        super.startLoadData();
+        Call<List<AppListItemBean>> listCall = HeiMaRetrofit.getInstrance().getApi().listGame(0);
+        listCall.enqueue(new Callback<List<AppListItemBean>>() {
+            @Override
+            public void onResponse(Call<List<AppListItemBean>> call, Response<List<AppListItemBean>> response) {
+                Toast.makeText(getContext(),""+response.body(),Toast.LENGTH_SHORT).show();
+                getDataList().addAll(response.body());
+                onDataLoadSuccess();
+
+            }
+
+            @Override
+            public void onFailure(Call<List<AppListItemBean>> call, Throwable t) {
+
+            }
+        });
+
     }
+
+
+
+    @Override
+    protected void startLoadMoreData() {
+
+    }
+
+
+
 }
